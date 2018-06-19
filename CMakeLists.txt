@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_MACOSX_RPATH 1)
+set(CMAKE_MODULE_PATH ${CMAKE_PROJECT_DIR})
 PROJECT(pbc)
 enable_testing()
 
+include(FindGMP.cmake)
+
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
+#find_package(GMP 5.1.0)
 
 set(warnflags "-Wall -W -Wfloat-equal -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wredundant-decls")
 set(optflags  "-O3 -pipe -ffast-math -fomit-frame-pointer")
@@ -14,7 +18,7 @@ FLEX_TARGET(pbcscanner pbc/parser.lex ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.c COMPI
 BISON_TARGET(pbcparser pbc/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FLAGS "-b pbc/parser")
 ADD_FLEX_BISON_DEPENDENCY(pbcscanner pbcparser)
 
-include_directories("include" "pbc" ".")
+include_directories("include" "pbc" "." "${GMP_INCLUDES}" )
 
 set(libpbc_srcs
   arith/field.c
@@ -79,7 +83,15 @@ set(bin_srcs
   benchmark/multipairing.c )
 
 add_library(libpbc STATIC ${libpbc_srcs})
-target_link_libraries(libpbc gmp)
+target_link_libraries(libpbc ${GMP_LIBRARIES})
+set_target_properties(libpbc  PROPERTIES
+  FRAMEWORK TRUE
+  FRAMEWORK_VERSION C
+  MACOSX_FRAMEWORK_IDENTIFIER crypto.stanford.edu.pbc
+  # MACOSX_FRAMEWORK_INFO_PLIST Info.plist
+  PUBLIC_HEADER pbc.h
+  XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
+)
 
 add_executable(pbc
   pbc/pbc.c
