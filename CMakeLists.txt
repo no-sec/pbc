@@ -4,21 +4,43 @@ set(CMAKE_MODULE_PATH ${CMAKE_PROJECT_DIR})
 PROJECT(pbc)
 enable_testing()
 
-include(FindGMP.cmake)
-
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
-#find_package(GMP 5.1.0)
+
+set(ARCH "i386")
+
+if(${ARCH} STREQUAL "i386")
+    set(SHORTSDK "iphonesimulator")
+elseif(${ARCH} STREQUAL "armv7")
+    set(SHORTSDK "iphoneos")
+elseif(${ARCH} STREQUAL "arm64")
+    set(SHORTSDK "iphoneos")
+elseif(${ARCH} STREQUAL "x86_64")
+    set(SHORTSDK "macos")
+endif(${ARCH} STREQUAL "i386")
+
+execute_process(COMMAND "xcrun" "--sdk" ${SHORTSDK} "--find" "clang"           OUTPUT_VARIABLE CMAKE_C_COMPILER   OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND "xcrun" "--sdk" ${SHORTSDK} "--find" "clang++"         OUTPUT_VARIABLE CMAKE_CXX_COMPILER OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND "xcrun" "--sdk" ${SHORTSDK} "--show-sdk-platform-path" OUTPUT_VARIABLE PLATFORM           OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND "xcrun" "--sdk" ${SHORTSDK} "--show-sdk-path"          OUTPUT_VARIABLE SDK                OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+set(MIN_IOS "9.0")
+
+if(NOT ${ARCH} STREQUAL "x86_64")
+    set(EXTRAS "-miphoneos-version-min=${MIN_IOS} -no-integrated-as -arch ${ARCH} -target ${ARCH}-apple-darwin")
+endif(NOT ${ARCH} STREQUAL "x86_64")
 
 set(warnflags "-Wall -W -Wfloat-equal -Wendif-labels -Wshadow -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wredundant-decls")
 set(optflags  "-O3 -pipe -ffast-math -fomit-frame-pointer")
+
 set(CMAKE_C_FLAGS "${warnflags} ${optflags}")
+set(CMAKE_C_FLAGS "${EXTRAS} -isysroot ${SDK}")
 
 FLEX_TARGET(pbcscanner pbc/parser.lex ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.c COMPILE_FLAGS "--header-file=pbc/lex.yy.h")
 BISON_TARGET(pbcparser pbc/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FLAGS "-b pbc/parser")
 ADD_FLEX_BISON_DEPENDENCY(pbcscanner pbcparser)
 
-include_directories("include" "pbc" "." "${GMP_INCLUDES}" )
+include_directories("include" "pbc" "." "gmp/gmplib-${ARCH}/include" )
 
 set(libpbc_srcs
   arith/field.c
@@ -83,7 +105,7 @@ set(bin_srcs
   benchmark/multipairing.c )
 
 add_library(libpbc STATIC ${libpbc_srcs})
-target_link_libraries(libpbc ${GMP_LIBRARIES})
+target_link_libraries(libpbc "gmp/gmplib-${ARCH}/lib/libgmp.a")
 set_target_properties(libpbc  PROPERTIES
   FRAMEWORK TRUE
   FRAMEWORK_VERSION C
@@ -92,39 +114,40 @@ set_target_properties(libpbc  PROPERTIES
   PUBLIC_HEADER pbc.h
   XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
 )
+#set(APP_TYPE MACOSX_BUNDLE)
 
-add_executable(pbc
-  pbc/pbc.c
-  ${FLEX_pbcscanner_OUTPUTS}
-  ${BISON_pbcparser_OUTPUTS}
-  pbc/pbc_getline.readline.c)
-target_link_libraries(pbc libpbc readline)
+#add_executable(pbc
+#  pbc/pbc.c
+#  ${FLEX_pbcscanner_OUTPUTS}
+#  ${BISON_pbcparser_OUTPUTS}
+#  pbc/pbc_getline.readline.c)
+#target_link_libraries(pbc libpbc readline)
 
-set(fp_srcs
-  arith/field.c
-  arith/fp.c
-  arith/naivefp.c
-  arith/fastfp.c
-  arith/fasterfp.c
-  arith/montfp.c
-  arith/random.c
-  arith/init_random.c
-  misc/extend_printf.c
-  misc/memory.c
-  misc/utils.c
-  arith/multiz.c
-  misc/darray.c )
+#set(fp_srcs
+#  arith/field.c
+#  arith/fp.c
+#  arith/naivefp.c
+#  arith/fastfp.c
+#  arith/fasterfp.c
+#  arith/montfp.c
+#  arith/random.c
+#  arith/init_random.c
+#  misc/extend_printf.c
+#  misc/memory.c
+#  misc/utils.c
+#  arith/multiz.c
+#  misc/darray.c )
 
-set(poly_srcs
-  arith/poly.c
-  misc/darray.c)
+#set(poly_srcs
+#  arith/poly.c
+#  misc/darray.c)
 
-set(quadratic_srcs
-  arith/fieldquadratic.c )
+#set(quadratic_srcs
+#  arith/fieldquadratic.c )
 
-foreach(test fp quadratic poly exp prodpairing)
-  add_executable(${test}_test guru/${test}_test.c ${${test}_srcs})
-  target_link_libraries(${test}_test libpbc)
-  add_test(NAME ${test} COMMAND "${test}_test")
-endforeach(test)
+#foreach(test fp quadratic poly exp prodpairing)
+#  add_executable(${test}_test guru/${test}_test.c ${${test}_srcs})
+#  target_link_libraries(${test}_test libpbc)
+#  add_test(NAME ${test} COMMAND "${test}_test")
+#endforeach(test)
 
