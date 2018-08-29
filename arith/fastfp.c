@@ -347,6 +347,7 @@ void field_init_fast_fp(field_ptr f, mpz_t prime) {
   PBC_ASSERT(!mpz_fits_ulong_p(prime), "modulus too small");
   fp_field_data_ptr p;
   field_init(f);
+  f->name = "fastfp";
   f->init = fp_init;
   f->clear = fp_clear;
   f->set_si = fp_set_si;

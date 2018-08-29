@@ -535,6 +535,7 @@ static void f_set_multiz(element_ptr e, multiz m) {
 
 void field_init_multiz(field_ptr f) {
   field_init(f);
+  f->name = "multiz";
   f->init = f_init;
   f->clear = f_clear;
   f->set_si = f_set_si;

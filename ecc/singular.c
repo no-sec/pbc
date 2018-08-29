@@ -282,6 +282,7 @@ void field_init_curve_singular_with_node(field_t c, field_t field) {
   mpz_init(c->order);
   mpz_set(c->order, field->order);
   c->data = (void *) field;
+  c->name = "singular";
   c->init = sn_init;
   c->clear = sn_clear;
   c->random = sn_random;

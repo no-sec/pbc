@@ -703,6 +703,7 @@ void field_init_curve_ab(field_ptr f, element_ptr a, element_ptr b, mpz_t order,
   element_set(cdp->a, a);
   element_set(cdp->b, b);
 
+  f->name = "curve";
   f->init = curve_init;
   f->clear = curve_clear;
   f->neg = f->invert = curve_invert;

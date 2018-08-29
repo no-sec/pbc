@@ -228,6 +228,7 @@ static void zp_out_info(FILE * out, field_ptr f) {
 
 void field_init_naive_fp(field_ptr f, mpz_t prime) {
   field_init(f);
+  f->name = "naive";
   f->init = zp_init;
   f->clear = zp_clear;
   f->set_si = zp_set_si;

@@ -1385,6 +1385,7 @@ void field_init_poly(field_ptr f, field_ptr base_field) {
   pfptr p = f->data = pbc_malloc(sizeof(*p));
   p->field = base_field;
   p->mapbase = element_field_to_poly;
+  f->name = "poly";
   f->field_clear = field_clear_poly;
   f->init = poly_init;
   f->clear = poly_clear;
@@ -1482,6 +1483,7 @@ void field_init_polymod(field_ptr f, element_ptr poly) {
   element_init(p->poly, poly->field);
   element_set(p->poly, poly);
   int n = p->n = poly_degree(p->poly);
+  f->name = "polymod";
   f->field_clear = field_clear_polymod;
   f->init = polymod_init;
   f->clear = polymod_clear;

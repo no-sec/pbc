@@ -220,6 +220,7 @@ static int z_set_str(element_ptr e, const char *s, int base) {
 
 void field_init_z(field_ptr f) {
   field_init(f);
+  f->name = "z";
   f->init = z_init;
   f->clear = z_clear;
   f->set_si = z_set_si;

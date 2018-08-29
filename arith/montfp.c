@@ -534,6 +534,7 @@ void field_init_mont_fp(field_ptr f, mpz_t prime) {
   PBC_ASSERT(!mpz_fits_ulong_p(prime), "modulus too small");
   fptr p;
   field_init(f);
+  f->name = "montfp";
   f->init = fp_init;
   f->clear = fp_clear;
   f->set_si = fp_set_si;

@@ -595,6 +595,7 @@ void field_init_quadratic(field_ptr f, field_ptr fbase) {
   f->field_clear = field_clear_fq;
   f->data = fbase;
 
+  f->name = "quadratic";
   f->init = fq_init;
   f->clear = fq_clear;
   f->set_si = fq_set_si;
@@ -644,6 +645,7 @@ void field_init_quadratic(field_ptr f, field_ptr fbase) {
 void field_init_fi(field_ptr f, field_ptr fbase) {
   field_init(f);
   f->field_clear = field_clear_fi;
+  f->name = "fi";
   f->data = fbase;
   f->init = fq_init;
   f->clear = fq_clear;
