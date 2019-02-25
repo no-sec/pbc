@@ -4,6 +4,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_PROJECT_DIR})
 PROJECT(pbc)
 enable_testing()
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
+find_package(GMP REQUIRED)
+
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
 
@@ -65,7 +68,7 @@ set(libpbc_srcs
   misc/utils.c misc/darray.c misc/symtab.c misc/extend_printf.c misc/memory.c misc/get_time.c arith/init_random.c ) 
 
 add_library(pbc-${ARCH} STATIC ${libpbc_srcs})
-target_link_libraries(pbc-${ARCH} "gmp/gmplib-${ARCH}/lib/libgmp.a")
+target_link_libraries(pbc-${ARCH} ${GMP_LIBRARY})
 set_target_properties(pbc-${ARCH} PROPERTIES COMPILE_FLAGS "${EXTRAS} -isysroot ${SDK}")
 endforeach(ARCH)
 
