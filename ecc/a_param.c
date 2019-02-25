@@ -16,22 +16,7 @@
 #include "ecc/param.h"
 #include "pbc_a_param.h"
 #include "pbc_a1_param.h"
-
-typedef struct {
-  int exp2;
-  int exp1;
-  int sign1;
-  int sign0;
-  mpz_t r; // r = 2^exp2 + sign1 * 2^exp1 + sign0 * 1
-  mpz_t q; // we work in E(F_q) (and E(F_q^2))
-  mpz_t h; // r * h = q + 1
-} *a_param_ptr;
-
-typedef struct {
-  field_t Fq, Fq2, Eq;
-  int exp2, exp1;
-  int sign1;
-} *a_pairing_data_ptr;
+#include "pbc_structs.h"
 
 static void a_out_str(FILE *stream, void *data) {
   a_param_ptr p = data;

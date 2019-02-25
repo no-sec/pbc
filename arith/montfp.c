@@ -21,22 +21,10 @@
 #include "pbc_random.h"
 #include "pbc_fp.h"
 #include "pbc_memory.h"
+#include "pbc_structs.h"
 
-// Per-field data.
-typedef struct {
-  size_t limbs;           // Number of limbs per element.
-  size_t bytes;           // Number of bytes per element.
-  mp_limb_t *primelimbs;  // Points to an array of limbs holding the modulus.
-  mp_limb_t negpinv;      // -p^-1 mod b
-  mp_limb_t *R;           // R mod p
-  mp_limb_t *R3;          // R^3 mod p
-} *fptr;
-
-// Per-element data.
-typedef struct {
-  char flag;     // flag == 0 means the element is zero.
-  mp_limb_t *d;  // Otherwise d points to an array holding the element.
-} *eptr;
+typedef montfp_data_ptr fptr;
+typedef montfp_element_ptr eptr;
 
 // Copies limbs of z into dst and zeroes any leading limbs, where n is the
 // total number of limbs.

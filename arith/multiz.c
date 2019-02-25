@@ -120,7 +120,7 @@ static size_t multiz_out_str(FILE *stream, int base, multiz ep) {
       int n = darray_count(ep->a);
       int i;
       for(i = 0; i < n; i++) {
-        if (i) res += 2, fputs(", ", stream);
+        if (i) (void)(res += 2), fputs(", ", stream);
         res += multiz_out_str(stream, base, darray_at(ep->a, i));
       }
       fputc(']', stream);
@@ -168,7 +168,7 @@ static multiz multiz_new_unary(const multiz y,
       fun(x->z, y->z, scope_ptr);
       break;
     default:
-      PBC_ASSERT(T_ARR == ep->type, "no such type");
+      /* PBC_ASSERT(T_ARR == ep->type, "no such type"); */
       x->type = T_ARR;
       darray_init(x->a);
       darray_forall4(y->a,

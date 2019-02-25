@@ -14,24 +14,7 @@
 #include "pbc_random.h"
 #include "misc/darray.h"
 
-// Per-field data.
-typedef struct {
-  field_ptr field; // The field where the curve is defined.
-  element_t a, b;  // The curve is E: Y^2 = X^3 + a X + b.
-  // cofac == NULL means we're using the whole group of points.
-  // otherwise we're working in the subgroup of order #E / cofac,
-  // where #E is the number of points in E.
-  mpz_ptr cofac;
-  // A generator of E.
-  element_t gen_no_cofac;
-  // A generator of the subgroup.
-  element_t gen;
-  // A non-NULL quotient_cmp means we are working with the quotient group of
-  // order #E / quotient_cmp, and the points are actually coset
-  // representatives. Thus for a comparison, we must multiply by quotient_cmp
-  // before comparing.
-  mpz_ptr quotient_cmp;
-} *curve_data_ptr;
+#include "pbc_structs.h"
 
 // Per-element data. Elements of this group are points on the elliptic curve.
 typedef struct {

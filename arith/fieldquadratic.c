@@ -17,14 +17,10 @@
 #include "pbc_multiz.h"
 #include "pbc_fieldquadratic.h"
 #include "pbc_memory.h"
+#include "pbc_structs.h"
 
 // Per-element data.
-typedef struct {
-  // Elements have the form x + ya, where a is the square root of a quadratic
-  // nonresidue in the base field.
-  element_t x;
-  element_t y;
-} *eptr;
+typedef fieldquadratic_ptr eptr;
 
 // Per-field data: we use ''data'' as a field_ptr to the base field.
 

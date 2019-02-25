@@ -19,6 +19,10 @@
 // implementation. This is useful for benchmarking and testing.
 static void (*option_fpinit) (field_ptr f, mpz_t prime) = field_init_mont_fp;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void pbc_tweak_use_fp(char *s) {
   if (!strcmp(s, "naive")) {
     option_fpinit = field_init_naive_fp;
@@ -47,3 +51,7 @@ void field_init_fp(field_ptr f, mpz_t modulus) {
     }
   }
 }
+
+#ifdef __cplusplus
+}
+#endif

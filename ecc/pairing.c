@@ -239,6 +239,7 @@ void pairing_GT_init(pairing_ptr pairing, field_t f) {
   gt->field_clear = mulg_field_clear;
   gt->out_info = gt_out_info;
 
+  gt->name = "mulg";
   gt->init = mulg_init;
   gt->clear = mulg_clear;
   gt->set = mulg_set;
