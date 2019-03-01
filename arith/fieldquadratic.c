@@ -20,7 +20,7 @@
 #include "pbc_structs.h"
 
 // Per-element data.
-typedef fieldquadratic_ptr eptr;
+typedef fieldquadratic_data_ptr eptr;
 
 // Per-field data: we use ''data'' as a field_ptr to the base field.
 

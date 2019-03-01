@@ -48,19 +48,19 @@ typedef struct {
     mpz_t r; // r = 2^exp2 + sign1 * 2^exp1 + sign0 * 1
     mpz_t q; // we work in E(F_q) (and E(F_q^2))
     mpz_t h; // r * h = q + 1
-} *a_param_ptr;
+} a_param, *a_param_ptr;
 
 typedef struct {
     field_t Fq, Fq2, Eq;
     int exp2, exp1;
     int sign1;
-} *a_pairing_data_ptr;
+} a_pairing_data, *a_pairing_data_ptr;
 
 typedef struct {
     // Elements have the form x + ya, where a is the square root of a quadratic
     // nonresidue in the base field.
     element_t x;
     element_t y;
-} *fieldquadratic_ptr;
+} fieldquadratic_data, *fieldquadratic_data_ptr;
 
 #endif /* __pbc_structs_h__ */

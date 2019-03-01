@@ -617,9 +617,11 @@ void field_init(field_ptr f) {
 }
 
 void field_clear(field_ptr f) {
-  if (f->nqr) {
+  if (f == NULL) { return; }
+  if (f->nqr != NULL) {
     element_clear(f->nqr);
     pbc_free(f->nqr);
+    f->nqr = NULL;
   }
   mpz_clear(f->order);
   f->field_clear(f);
